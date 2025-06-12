@@ -4,7 +4,7 @@
   --header-link-bg: rgba(255, 255, 255, 0.1);
   --header-link-padding: 0.5rem 1rem;
   --header-link-radius: 4px;
-  --header-link-transition: all 0.2s ease;
+  --header-link-transition: all 0.2s ease; 
 
   --header-user-status-color: #e0e0e0;
   --header-user-status-weight: 600;
@@ -48,6 +48,12 @@
 
 .auth-links__link:active {
   transform: translateY(0);
+}
+
+.auth-links__link--active {
+  color: var(--header-link-hover);
+  background-color: var(--header-link-bg);
+  transform: translateY(-1px);
 }
 
 .user-status {

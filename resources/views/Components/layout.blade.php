@@ -4,7 +4,7 @@
         'currentUserId' => null,
         'userDocCounts' => [],
         'currentCategory' => null,
-        'contentTitle' => '',
+        'documents' => [],
     ]);
 
     <!DOCTYPE html>
