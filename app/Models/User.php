@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 
 class User extends Authenticatable
 {
@@ -18,8 +19,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'firstname',
-        'lastname',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
@@ -39,48 +40,11 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
+    protected function casts(): array {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'id' => 'integer',
-        ];
-    }
-    
-    /**
-     * Get all users with predefined data
-     * 
-     * @return array
-     */
-    public static function all($columns = ['*']): array
-    {
-        // Static user data as provided in the example
-        return [
-            [
-                'id' => 1,
-                'email' => 'sergey8osokin@gmail.com',
-                'firstname' => 'Sergey',
-                'lastname' => 'Osokin',
-            ],
-            [
-                'id' => 2,
-                'email' => 'galina8treneva@gmail.com',
-                'firstname' => 'Galina',
-                'lastname' => 'Treneva',
-            ],
-            [
-                'id' => 3,
-                'email' => 'amerkel@germany.de',
-                'firstname' => 'Alina',
-                'lastname' => 'Merkel',
-            ],
-            [
-                'id' => 5,
-                'email' => 'john.doe@usa.us',
-                'firstname' => 'John',
-                'lastname' => 'Doe',
-            ],
         ];
     }
 }

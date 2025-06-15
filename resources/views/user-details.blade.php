@@ -5,8 +5,8 @@
 
         <ul>
             <li>{{ $user['email'] }}</li>
-            <li>{{ $user['firstname'] }}</li>
-            <li>{{ $user['lastname'] }}</li>
+            <li>{{ $user['first_name'] }}</li>
+            <li>{{ $user['last_name'] }}</li>
         </ul>
     </div>
 </x-layout>

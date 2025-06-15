@@ -22,8 +22,7 @@ Route::get('/', function ()  {
 });
 
 Route::get('/users/{id}', function ($id) {
-
-	$user = Arr::first(User::all(), fn($user) => $user['id'] == $id);
+	$user = User::find($id);
 
 	return view('user-details', [
 		'pageTitle' => 'User details',
