@@ -66,7 +66,7 @@
         <?php endif; ?>
         <?php else: ?>
         <div class="document-list" id="documentList">
-            <?php foreach ($documents as $doc): ?>
+            @foreach ($documents as $doc)
             <div class="document-item" data-id="<?= $doc['id'] ?>" data-user-id="<?= $currentUserId ?>">
                 <div class="document-item-content" onclick="window.location='/document/?id=<?= $doc['id'] ?>&user_id=<?= $currentUserId ?>'">
                     <div class="document-icon">
