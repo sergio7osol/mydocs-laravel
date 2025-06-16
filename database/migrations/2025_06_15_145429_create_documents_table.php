@@ -18,15 +18,11 @@ return new class extends Migration
             $table->string('file_path', 255);
             $table->integer('file_size');
             $table->string('file_type', 50);
-            $table->foreignId('user_id')->constrained();
+            $table->foreignIdFor(\App\Models\User::class);
             $table->date('created_date')->nullable();
             $table->mediumText('description')->nullable();
-            $table->foreignId('category_id')->constrained();
+            $table->foreignIdFor(\App\Models\Category::class);
             $table->timestamps();
-            
-            // Indexes
-            $table->index('user_id');
-            $table->index('category_id');
         });
     }
 
