@@ -27,8 +27,15 @@ class DocumentFactory extends Factory
         // Get or create a category
         $category = Category::inRandomOrder()->first();
         if (!$category) {
-            // In production, you'd need to ensure this creates a valid category structure
-            $category = Category::factory()->create();
+            // Create a simple root category if none exists
+            $category = Category::create([
+                'name' => 'General',
+                'parent_id' => null,
+                'path' => null,
+                'level' => 0,
+                'is_active' => true,
+                'display_order' => 0,
+            ]);
         }
 
         // Random file extension and MIME type
@@ -40,17 +47,19 @@ class DocumentFactory extends Factory
             'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'txt' => 'text/plain',
             'jpg' => 'image/jpeg',
-            'png' => 'image/png'
+            'png' => 'image/png',
+            'gif' => 'image/gif',
         ];
         
         $extension = fake()->randomElement(array_keys($fileTypes));
         $mimeType = $fileTypes[$extension];
         $filename = fake()->word() . '.' . $extension;
+        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
         
         return [
             'title' => fake()->sentence(3),
             'filename' => $filename,
-            'file_path' => 'documents/' . $filename,
+            'file_path' => ($isImage ? 'images/' : 'documents/') . $filename,
             'file_size' => fake()->numberBetween(1000, 10000000),
             'file_type' => $mimeType,
             'user_id' => $user->id, // ✓ USE THE ACTUAL USER ID

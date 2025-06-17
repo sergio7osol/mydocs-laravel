@@ -34,12 +34,10 @@ class Document extends Model {
      */
     protected $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
+        'user_id' => 'integer',  
         'category_id' => 'integer',
         'file_size' => 'integer',
         'created_date' => 'date',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
 
     /**
@@ -61,10 +59,14 @@ class Document extends Model {
     /**
      * Get human readable file size
      */
-    public function getFileSizeHumanAttribute()
+    public function getFileSizeHumanAttribute(): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        $bytes = $this->file_size;
+        $bytes = max(0, $this->file_size); // Prevent negative values
+        
+        if ($bytes === 0) {
+            return '0 B';
+        }
         
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;
@@ -76,7 +78,7 @@ class Document extends Model {
     /**
      * Check if the document is a specific file type
      */
-    public function isFileType($type)
+    public function isFileType(string $type): bool
     {
         return stripos($this->file_type, $type) !== false;
     }
@@ -84,7 +86,7 @@ class Document extends Model {
     /**
      * Scope to filter by file type
      */
-    public function scopeOfType($query, $type)
+    public function scopeOfType($query, string $type)
     {
         return $query->where('file_type', 'like', "%{$type}%");
     }
@@ -92,7 +94,7 @@ class Document extends Model {
     /**
      * Scope to filter by user
      */
-    public function scopeByUser($query, $userId)
+    public function scopeByUser($query, int $userId)
     {
         return $query->where('user_id', $userId);
     }
