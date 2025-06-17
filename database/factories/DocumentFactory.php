@@ -27,15 +27,7 @@ class DocumentFactory extends Factory
         // Get or create a category
         $category = Category::inRandomOrder()->first();
         if (!$category) {
-            // Create a simple root category if none exists
-            $category = Category::create([
-                'name' => 'General',
-                'parent_id' => null,
-                'path' => null,
-                'level' => 0,
-                'is_active' => true,
-                'display_order' => 0,
-            ]);
+            $category = Category::factory()->create();
         }
 
         // Random file extension and MIME type
