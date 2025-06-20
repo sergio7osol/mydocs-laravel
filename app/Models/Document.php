@@ -40,27 +40,18 @@ class Document extends Model {
         'created_date' => 'date',
     ];
 
-    /**
-     * Get the user that owns the document
-     */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the category that the document belongs to
-     */
-    public function category()
-    {
+    public function category() {
         return $this->belongsTo(Category::class);
     }
 
     /**
      * Get human readable file size
      */
-    public function getFileSizeHumanAttribute(): string
-    {
+    public function getFileSizeHumanAttribute(): string {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
         $bytes = max(0, $this->file_size); // Prevent negative values
         
@@ -78,8 +69,7 @@ class Document extends Model {
     /**
      * Check if the document is a specific file type
      */
-    public function isFileType(string $type): bool
-    {
+    public function isFileType(string $type): bool {
         return stripos($this->file_type, $type) !== false;
     }
 

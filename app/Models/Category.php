@@ -42,11 +42,8 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    /**
-     * Get the documents in this category
-     */
-    public function documents()
-    {
+    // Get the documents in this category
+    public function documents() {
         return $this->hasMany(Document::class);
     }
 

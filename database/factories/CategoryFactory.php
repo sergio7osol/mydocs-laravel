@@ -26,13 +26,16 @@ class CategoryFactory extends Factory
             'Work', 'Education', 'Finance', 'Legal', 'Marketing'
         ];
 
+        // For root categories, use sequential display_order starting from existing count
+        $nextDisplayOrder = Category::whereNull('parent_id')->count();
+
         return [
             'name' => fake()->randomElement($categoryNames),
             'parent_id' => null, // Root category by default
             'path' => null, // Root categories have no path
             'level' => 0, // Root level
             'is_active' => fake()->boolean(90), // 90% chance of being active
-            'display_order' => fake()->numberBetween(0, 100),
+            'display_order' => $nextDisplayOrder, // Sequential: 0, 1, 2, 3...
         ];
     }
 
