@@ -1,0 +1,129 @@
+{
+    "windsurf.autocompleteSpeed": "fast",
+    "git.terminalGitEditor": true,
+    "liveServer.settings.AdvanceCustomBrowserCmdLine": "",
+    "liveServer.settings.root": "/htdocs",
+    "liveServer.settings.proxy": "http://localhost",
+    "liveServer.settings.ignoreFiles": [
+      "**/vendor/**",
+      "**/node_modules/**"
+    ],
+    "liveServer.settings.wait": 200,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Visual Studio Dark",
+    "volar.formatting.printWidth": 200,
+    "security.workspace.trust.untrustedFiles": "open",
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "Vue.volar"
+    },
+    "[php]": {
+      "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
+    "[jade]": {
+      "editor.formatOnSave": true
+    },
+    "[blade]": {
+      "editor.defaultFormatter": "onecentlin.laravel-blade",
+      "editor.formatOnSave": false,
+      "editor.tabSize": 2,
+      "editor.insertSpaces": true,
+      "editor.autoIndent": "full",
+      "editor.detectIndentation": false
+    },
+    "editor.wordWrap1": "off",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 180,
+    "prettier.bracketSameLine": true,
+    "editor.minimap.enabled": false,
+    "editor.fontFamily": "Fira Code, Consolas, 'Courier New', monospace",
+    "editor.fontVariations": false,
+    "editor.fontLigatures": true,
+    "php.validate.executablePath": "c:\\PHP\\php.exe",
+    "windsurf.autoExecutionPolicy": "off",
+    "windsurf.chatFontSize": "default",
+    "windsurf.explainAndFixInCurrentConversation": true,
+    "windsurf.rememberLastModelSelection": true,
+    "windsurf.openRecentConversation": true,
+    "[jsonc]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+    "emmet.triggerExpansionOnTab": true,
+    "editor.tokenColorCustomizations": {
+      "textMateRules": [
+        {
+          "scope": [
+            "punctuation.section.embedded.begin.php",
+            "punctuation.section.embedded.end.php",
+            "keyword.blade",
+            "meta.directive.blade"
+          ],
+          "settings": {
+            "foreground": "#e77669"
+          }
+        },
+        {
+          "scope": "support.function.construct.php, support.function.errorfunc.php",
+          "settings": {
+            "foreground": "#a4dea2", // Teal color for PHP functions
+            "fontStyle": "normal"
+          }
+        },
+        {
+          "scope": "support.function.php",
+          "settings": {
+            "foreground": "#130be5", // Teal color for PHP functions
+            "fontStyle": "normal"
+          }
+        },
+        {
+          "scope": "keyword.control.ternary.php",
+          "settings": {
+            "foreground": "#fd3044", // Teal color for PHP functions
+            "fontStyle": "normal"
+          }
+        },
+        {
+          "scope": "punctuation.definition.variable.php, variable.other.php",
+          "settings": {
+            "foreground": "#bb9ac0", // PHP variables
+            "fontStyle": "normal"
+          }
+        },
+        {
+          "scope": [
+            "string.quoted.single.php",
+            "meta.function-call.php",
+            "source.php",
+            "meta.embedded.block.blade",
+            "text.html.php.blade"
+          ],
+          "settings": {
+            "foreground": "#d9d9d9", // PHP variables
+            "fontStyle": "normal"
+          }
+        },
+        {
+          "scope": [
+            "meta.function.echo.blade"
+          ],
+          "settings": {
+            "foreground": "#d9d9d9", // PHP variables
+            "fontStyle": "normal"
+          }
+        }
+      ]
+    }
+  }
