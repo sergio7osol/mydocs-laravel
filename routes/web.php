@@ -5,9 +5,11 @@ use App\Models\User;
 use App\Models\Document;
 
 Route::get('/', function ()  {
+	$documents = Document::with('category')->get();	
+
 	return view('home', [
 		'pageTitle' => 'Documents list',
-		'documents' => Document::all(),
+		'documents' => $documents,
 		'users' => User::all(),
 		'currentUserId' => 1,
 		'userDocCounts' => [
