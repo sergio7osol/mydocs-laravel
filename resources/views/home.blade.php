@@ -147,7 +147,12 @@
         </div>
       </div>
       @endforeach
+      
+      <div class="main-pagination">
+        {{ $documents->links() }}
+      </div>
     </div>
+    
 
     <div class="document-upload">
       <a href="/document/create{{ isset($currentUserId) ? '?user_id=' . $currentUserId : '' }}&category={{ urlencode($currentCategory) }}"

@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Models\Document;
 
 Route::get('/', function ()  {
-	$documents = Document::with('category')->get();	
+	$documents = Document::with('category')->paginate(5);	
 
 	return view('home', [
 		'pageTitle' => 'Documents list',
