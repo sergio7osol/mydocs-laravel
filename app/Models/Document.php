@@ -10,11 +10,6 @@ use App\Models\Category;
 class Document extends Model {
     use HasFactory;
     
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'title',
         'filename',
@@ -27,11 +22,6 @@ class Document extends Model {
         'category_id'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',  

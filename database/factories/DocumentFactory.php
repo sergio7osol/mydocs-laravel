@@ -54,7 +54,7 @@ class DocumentFactory extends Factory
             'file_path' => ($isImage ? 'images/' : 'documents/') . $filename,
             'file_size' => fake()->numberBetween(1000, 10000000),
             'file_type' => $mimeType,
-            'user_id' => $user->id, // ✓ USE THE ACTUAL USER ID
+            'user_id' => $user->id,
             'created_date' => fake()->dateTimeBetween('-1 year', 'now'),
             'description' => fake()->paragraph(2),
             'category_id' => $category->id,
