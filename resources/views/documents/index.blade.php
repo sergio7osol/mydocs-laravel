@@ -4,6 +4,11 @@
 		error_log('Document count in view: ' . $documentCount . ' for user: ' . $currentUserId . ' and category: ' . ($currentCategory ?? 'All'));
 	@endphp
 	<div class="content">
+		@if (session('message'))
+			<div class="upload-form__alert upload-form__alert--success">
+				{{ session('message') }}
+			</div>
+		@endif
 		<div class="content-header">
 			<h1>Documents</h1>
 			@if (isset($currentCategory) && !empty($currentCategory))

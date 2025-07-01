@@ -3,11 +3,7 @@
     <div class="upload-form__container">
       @if ($errors->any())
       <div class="upload-form__alert upload-form__alert--danger">
-        <ul>
-          @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-          @endforeach
-        </ul>
+        <div class="upload-form__general-error">There were some errors with your submission. Please check the fields below.</div>
       </div>
       @endif
 
@@ -35,7 +31,7 @@
                 class="upload-form__line-input {{ $errors->has('title') ? 'is-invalid' : '' }}" required maxlength="70"
                 value="{{ old('title', $document->title ?? '') }}">
               @error('title')
-              <div class="error-message">{{ $message }}</div>
+              <div class="upload-form__error-message">{{ $message }}</div>
               @enderror
               <small class="upload-form__line-clarification">The title of the document being uploaded.</small>
             </div>
@@ -57,7 +53,7 @@
                   <span class="upload-form__line-size">Max: 15MB</span>
                 </div>
                 @error('document')
-                <div class="error-message">{{ $message }}</div>
+                <div class="upload-form__error-message">{{ $message }}</div>
                 @enderror
               </div>
               <small class="upload-form__line-clarification">Upload a document in supported formats (max 15MB).</small>
@@ -74,7 +70,7 @@
                 @endforeach
               </select>
               @error('category_id')
-              <div class="error-message">{{ $message }}</div>
+              <div class="upload-form__error-message">{{ $message }}</div>
               @enderror
             </div>
 
@@ -84,7 +80,7 @@
                 class="upload-form__line-input {{ $errors->has('created_date') ? 'is-invalid' : '' }}"
                 value="{{ old('created_date', $document->created_date ?? '') }}">
               @error('created_date')
-              <div class="error-message">{{ $message }}</div>
+              <div class="upload-form__error-message">{{ $message }}</div>
               @enderror
             </div>
 
@@ -95,7 +91,7 @@
                 class="upload-form__line-input {{ $errors->has('description') ? 'is-invalid' : '' }}"
                 maxlength="300">{{ old('description', $document->description ?? '') }}</textarea>
               @error('description')
-              <div class="error-message">{{ $message }}</div>
+              <div class="upload-form__error-message">{{ $message }}</div>
               @enderror
               <small class="upload-form__line-clarification">Brief description of the document (maximum 300
                 characters)</small>
