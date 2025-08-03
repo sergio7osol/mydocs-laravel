@@ -74,6 +74,7 @@
               @enderror
             </div>
 
+            <!-- Created Date -->
             <div class="upload-form__line">
               <label for="created_date" class="upload-form__line-title">Document Date (optional):</label>
               <input type="date" name="created_date" id="created_date"

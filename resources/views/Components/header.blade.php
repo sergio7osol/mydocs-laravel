@@ -3,10 +3,10 @@
 'currentUserId' => null,
 'userDocCounts' => [],
 'currentCategory' => null,
-]);
+])
 
 <header class="main-header">
-    <h1><a href="/" class="main-header__title">MyDocs Document Management</a></h1>
+    <h1><a href="/documents/" class="main-header__title">MyDocs Document Management</a></h1>
     <div class="user-selector">
         <span class="user-status">{{ isset($_SESSION['user']) ? ($_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name']) : 'Guest' }}</span>
 

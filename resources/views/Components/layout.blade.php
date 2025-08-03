@@ -5,7 +5,7 @@
         'userDocCounts' => [],
         'currentCategory' => null,
         'documents' => [],
-    ]);
+    ])
 
     <!DOCTYPE html>
     <html lang="de">
