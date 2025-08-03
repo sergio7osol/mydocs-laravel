@@ -143,7 +143,34 @@ Route::patch('/documents/{id}', function (Request $request, $id) {
 	}
 })->name('documents.update');
 
+Route::delete('/documents/{id}', function ($id) {
+	$document = Document::find($id);
+	
+	if (!$document) {
+		return redirect()->route('documents.index')->withErrors(['document' => 'Document not found']);
+	}
 
+	$document->delete();
+
+	return redirect()->route('documents.index')->with('message', 'Document deleted successfully!');
+})->name('documents.destroy');
+
+// Download document route (temporary)
+Route::get('/documents/{id}/download', function ($id) {
+	$document = Document::find($id);
+	
+	if (!$document) {
+		return redirect()->route('documents.index')->withErrors(['document' => 'Document not found']);
+	}
+
+	// Check if file exists
+	if (!$document->file_path || !Storage::disk('public')->exists($document->file_path)) {
+		return redirect()->back()->withErrors(['document' => 'File not found on server']);
+	}
+
+	// Return file download response
+	return response()->download(Storage::disk('public')->path($document->file_path), $document->filename);
+})->name('documents.download');
 
 Route::get('/users/{id}', function ($id) {
 	$user = User::find($id);

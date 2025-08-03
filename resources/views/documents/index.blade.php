@@ -121,12 +121,12 @@
 							</div>
 						</div>
 						<div class="document-item__actions">
-              <a href="/documents/{{ $doc->id }}/edit?user_id={{ $currentUserId }}" class="document-item__btn document-item__btn--edit">
+              <a href="{{ route('documents.edit', ['id' => $doc->id]) }}" class="document-item__btn document-item__btn--edit">
 								✏️
 							</a>
-							<form method="POST" action="/document" onsubmit="return confirm('Are you sure you want to delete this document?');" onclick="event.stopPropagation();">
-								<input type="hidden" name="_method" value="DELETE">
-								<input type="hidden" name="id" value="{{ $doc['id'] }}">
+							<form method="POST" action="{{ route('documents.destroy', $doc) }}" onsubmit="return confirm('Are you sure you want to delete this document?');" onclick="event.stopPropagation();">
+								@csrf
+								@method('DELETE')
 								<input type="hidden" name="user_id" value="{{ $currentUserId }}">
 								@if (isset($currentCategory))
 									<input type="hidden" name="category" value="{{ htmlspecialchars($currentCategory) }}">
