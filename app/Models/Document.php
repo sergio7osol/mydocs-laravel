@@ -82,4 +82,12 @@ class Document extends Model {
     {
         return $query->where('user_id', $userId);
     }
+
+    /**
+     * Resolve route binding with eager loaded relationships
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->with(['category', 'user'])->find($value);
+    }
 }

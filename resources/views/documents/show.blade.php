@@ -170,11 +170,11 @@
     </div>
 
     <section class="document-actions">
-      <a href="{{ route('documents.edit', ['id' => $document->id]) }}" class="document-actions__btn document-actions__btn--edit">
+      <a href="{{ route('documents.edit', $document) }}" class="document-actions__btn document-actions__btn--edit">
         <span class="document-actions__icon">✏️</span>
         <span class="document-actions__text">Edit Document</span>
       </a>
-      <a href="{{ route('documents.download', ['id' => $document->id]) }}" class="document-actions__btn document-actions__btn--download">
+      <a href="{{ route('documents.download', $document) }}" class="document-actions__btn document-actions__btn--download">
         <span class="document-actions__icon">📥</span>
         <span class="document-actions__text">Download Document</span>
       </a>

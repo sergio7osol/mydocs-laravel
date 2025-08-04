@@ -77,7 +77,7 @@
 			<div class="document-list" id="documentList">
 				@foreach ($documents as $doc)
 					<div class="document-item" data-id="{{ $doc['id'] }}" data-user-id="{{ $currentUserId }}">
-						<div class="document-item-content" onclick="window.location='{{ route('documents.show', $doc['id']) }}'">
+						<div class="document-item-content" onclick="window.location='{{ route('documents.show', $doc) }}'">
 							<div class="document-icon">
 								@php
 									$fileType = $doc['file_type'] ?? '';
@@ -121,7 +121,7 @@
 							</div>
 						</div>
 						<div class="document-item__actions">
-              <a href="{{ route('documents.edit', ['id' => $doc->id]) }}" class="document-item__btn document-item__btn--edit">
+              <a href="{{ route('documents.edit', $doc) }}" class="document-item__btn document-item__btn--edit">
 								✏️
 							</a>
 							<form method="POST" action="{{ route('documents.destroy', $doc) }}" onsubmit="return confirm('Are you sure you want to delete this document?');" onclick="event.stopPropagation();">

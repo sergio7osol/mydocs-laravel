@@ -30,19 +30,14 @@ Route::get('/documents/create', function () {
 	]);
 })->name('documents.create');
 
-Route::get('/documents/{id}', function ($id) {
-	$document = Document::with(['category', 'user'])->find($id);
-	
-	if (!$document) {
-		return redirect()->route('documents.index')->withErrors(['document' => 'Document not found']);
-	}
+Route::get('/documents/{doc}', function (Document $doc) {
 
 	return view('documents.show', [
 		'pageTitle' => 'Document details',
-		'document' => $document,
+		'document' => $doc,
 		'users' => User::all(),
 		'userDocCounts' => [],
-		'documents' => collect([$document]),
+		'documents' => collect([$doc]),
 	]);
 })->name('documents.show');
 
@@ -81,24 +76,17 @@ Route::post('/documents', function (Request $request) {
 	}
 });
 
-Route::get('/documents/{id}/edit', function ($id) {
-	$document = Document::find($id);
-
+Route::get('/documents/{doc}/edit', function (Document $doc) {
 	return view('documents.edit', [
 		'pageTitle' => 'Edit Document',
-		'document' => $document,
+		'document' => $doc,
 		'users' => User::all(),
 		'categories' => Category::pluck('name', 'id'),
 	]);
 })->name('documents.edit');
 
 // Update document route
-Route::patch('/documents/{id}', function (Request $request, $id) {
-	$document = Document::find($id);
-	
-	if (!$document) {
-		return redirect()->route('documents.index')->withErrors(['document' => 'Document not found']);
-	}
+Route::patch('/documents/{doc}', function (Request $request, Document $doc) {
 
 	$validated = $request->validate([
 		'title'        => 'required|string|max:70',
@@ -111,17 +99,17 @@ Route::patch('/documents/{id}', function (Request $request, $id) {
 
 	try {
 		// Update basic fields
-		$document->title = $validated['title'];
-		$document->description = $validated['description'];
-		$document->created_date = $validated['created_date'];
-		$document->category_id = $validated['category_id'];
-		$document->user_id = $validated['user_id'];
+		$doc->title = $validated['title'];
+		$doc->description = $validated['description'];
+		$doc->created_date = $validated['created_date'];
+		$doc->category_id = $validated['category_id'];
+		$doc->user_id = $validated['user_id'];
 
 		// Handle file replacement if new file uploaded
 		if ($request->hasFile('document')) {
 			// Delete old file if it exists
-			if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-				Storage::disk('public')->delete($document->file_path);
+			if ($doc->file_path && Storage::disk('public')->exists($doc->file_path)) {
+				Storage::disk('public')->delete($doc->file_path);
 			}
 
 			// Upload new file
@@ -129,57 +117,44 @@ Route::patch('/documents/{id}', function (Request $request, $id) {
 			$filename = time() . '_' . $file->getClientOriginalName();
 			$path = $file->storeAs('documents', $filename, 'public');
 
-			$document->filename = $filename;
-			$document->file_path = $path;
-			$document->file_size = $file->getSize();
-			$document->file_type = $file->getMimeType();
+			$doc->filename = $filename;
+			$doc->file_path = $path;
+			$doc->file_size = $file->getSize();
+			$doc->file_type = $file->getMimeType();
 		}
 
-		$document->save();
+		$doc->save();
 
-		return redirect()->route('documents.show', $id)->with('message', 'Document updated successfully!');
+		return redirect()->route('documents.show', $doc)->with('message', 'Document updated successfully!');
 	} catch (\Exception $e) {
 		return redirect()->back()->withErrors(['document' => 'Update failed: ' . $e->getMessage()])->withInput();
 	}
 })->name('documents.update');
 
-Route::delete('/documents/{id}', function ($id) {
-	$document = Document::find($id);
-	
-	if (!$document) {
-		return redirect()->route('documents.index')->withErrors(['document' => 'Document not found']);
-	}
-
-	$document->delete();
+Route::delete('/documents/{doc}', function (Document $doc) {
+	$doc->delete();
 
 	return redirect()->route('documents.index')->with('message', 'Document deleted successfully!');
 })->name('documents.destroy');
 
 // Download document route (temporary)
-Route::get('/documents/{id}/download', function ($id) {
-	$document = Document::find($id);
-	
-	if (!$document) {
-		return redirect()->route('documents.index')->withErrors(['document' => 'Document not found']);
-	}
+Route::get('/documents/{doc}/download', function (Document $doc) {
 
 	// Check if file exists
-	if (!$document->file_path || !Storage::disk('public')->exists($document->file_path)) {
+	if (!$doc->file_path || !Storage::disk('public')->exists($doc->file_path)) {
 		return redirect()->back()->withErrors(['document' => 'File not found on server']);
 	}
 
 	// Return file download response
-	return response()->download(Storage::disk('public')->path($document->file_path), $document->filename);
+	return response()->download(Storage::disk('public')->path($doc->file_path), $doc->filename);
 })->name('documents.download');
 
-Route::get('/users/{id}', function ($id) {
-	$user = User::find($id);
-
+Route::get('/users/{user}', function (User $user) {
 	return view('users.show', [
 		'pageTitle' => 'User details',
 		'user' => $user,
 	]);
-});
+})->name('users.show');
 
 Route::get('/register', function () {
 	return view('users.register', [
