@@ -6,29 +6,8 @@ use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\DocumentController;
 
-// index
-Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+Route::resource('documents', DocumentController::class);
 
-// create
-Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
-
-// show
-Route::get('/documents/{doc}', [DocumentController::class, 'show'])->name('documents.show');
-
-// store
-Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
-
-// edit
-Route::get('/documents/{doc}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
-
-// update
-Route::patch('/documents/{doc}', [DocumentController::class, 'update'])->name('documents.update');
-
-// delete
-Route::delete('/documents/{doc}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-
-
-// download
 Route::get('/documents/{doc}/download', function (Document $doc) {
 
 	// Check if file exists

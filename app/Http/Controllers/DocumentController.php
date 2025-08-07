@@ -33,13 +33,13 @@ class DocumentController extends Controller
     ]);
   }
 
-  public function show(Document $doc) {
+  public function show(Document $document) {
     return view('documents.show', [
       'pageTitle' => 'Document details',
-      'document' => $doc,
+      'document' => $document,
       'users' => User::all(),
       'userDocCounts' => [],
-      'documents' => collect([$doc]),
+      'documents' => collect([$document]),
     ]);
   }
 
@@ -78,16 +78,16 @@ class DocumentController extends Controller
     }
   }
 
-  public function edit(Document $doc) {
+  public function edit(Document $document) {
     return view('documents.edit', [
       'pageTitle' => 'Edit Document',
-      'document' => $doc,
+      'document' => $document,
       'users' => User::all(),
       'categories' => Category::pluck('name', 'id'),
     ]);
   }
 
-  public function update(Request $request, Document $doc) {
+  public function update(Request $request, Document $document) {
     $validated = $request->validate([
       'title'        => 'required|string|max:70',
       'description'  => 'nullable|string|max:300',
@@ -99,17 +99,17 @@ class DocumentController extends Controller
   
     try {
       // Update basic fields
-      $doc->title = $validated['title'];
-      $doc->description = $validated['description'];
-      $doc->created_date = $validated['created_date'];
-      $doc->category_id = $validated['category_id'];
-      $doc->user_id = $validated['user_id'];
+      $document->title = $validated['title'];
+      $document->description = $validated['description'];
+      $document->created_date = $validated['created_date'];
+      $document->category_id = $validated['category_id'];
+      $document->user_id = $validated['user_id'];
   
       // Handle file replacement if new file uploaded
       if ($request->hasFile('document')) {
         // Delete old file if it exists
-        if ($doc->file_path && Storage::disk('public')->exists($doc->file_path)) {
-          Storage::disk('public')->delete($doc->file_path);
+        if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
+          Storage::disk('public')->delete($document->file_path);
         }
   
         // Upload new file
@@ -117,22 +117,22 @@ class DocumentController extends Controller
         $filename = time() . '_' . $file->getClientOriginalName();
         $path = $file->storeAs('documents', $filename, 'public');
   
-        $doc->filename = $filename;
-        $doc->file_path = $path;
-        $doc->file_size = $file->getSize();
-        $doc->file_type = $file->getMimeType();
+        $document->filename = $filename;
+        $document->file_path = $path;
+        $document->file_size = $file->getSize();
+        $document->file_type = $file->getMimeType();
       }
   
-      $doc->save();
+      $document->save();
   
-      return redirect()->route('documents.show', $doc)->with('message', 'Document updated successfully!');
+      return redirect()->route('documents.show', $document)->with('message', 'Document updated successfully!');
     } catch (\Exception $e) {
       return redirect()->back()->withErrors(['document' => 'Update failed: ' . $e->getMessage()])->withInput();
     }
   }
 
-  public function destroy(Document $doc) {
-    $doc->delete();
+  public function destroy(Document $document) {
+    $document->delete();
 
     return redirect()->route('documents.index')->with('message', 'Document deleted successfully!');
   }
