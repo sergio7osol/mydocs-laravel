@@ -212,6 +212,10 @@
   text-decoration: none;
 }
 
+.category-tree__add-link--inline {
+  display: inline-flex;
+}
+
 .category-tree__add-link:hover {
   color: var(--color-primary-dark);
 }

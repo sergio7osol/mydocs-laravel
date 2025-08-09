@@ -20,16 +20,31 @@ class DocumentController extends Controller
       'currentUserId' => 1,
       'userDocCounts' => $documents->pluck('user_id', 'documents_count')->toArray(),
       'currentCategory' => null,
+      'currentCategoryId' => null,
     ]);
   }
 
-  public function create() {
+  public function create(Request $request) {
+    // Determine preselected category id from query (?category_id=...) or fallback from ?category= (id or name)
+    $selectedCategoryId = null;
+    if ($request->filled('category_id')) {
+      $selectedCategoryId = (int) $request->input('category_id');
+    } elseif ($request->filled('category')) {
+      $param = $request->input('category');
+      if (is_numeric($param)) {
+        $selectedCategoryId = (int) $param;
+      } else {
+        $selectedCategoryId = Category::where('name', $param)->value('id');
+      }
+    }
+
     return view('documents.create', [
       'pageTitle' => 'Create document',
       'users' => User::all(),
       'currentUserId' => 1,
       'categories' => Category::pluck('name', 'id'),
       'currentCategory' => null,
+      'selectedCategoryId' => $selectedCategoryId,
     ]);
   }
 

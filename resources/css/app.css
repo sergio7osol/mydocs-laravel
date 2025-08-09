@@ -4,6 +4,7 @@
 @import 'header';
 @import 'category-tree';
 @import 'document-list';
+@import 'table-semantic';
 @import 'pagination';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

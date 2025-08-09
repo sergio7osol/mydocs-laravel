@@ -1,0 +1,59 @@
+/* Semantic table styling for categories list */
+
+.table {
+  width: 100%;
+  border-collapse: separate; /* allows radius/spacing if needed */
+  border-spacing: 0;
+}
+
+/* Cells */
+.table th,
+.table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  vertical-align: middle;
+}
+
+/* Header */
+.table thead th {
+  background: var(--color-gray-100);
+  color: var(--color-gray-800);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+
+/* Row separators */
+.table tbody tr + tr td {
+  border-top: 1px solid var(--color-gray-300);
+}
+
+/* Hover */
+.table tbody tr:hover {
+  background-color: var(--color-gray-100);
+}
+
+/* Center the Active and Display Order columns */
+.table th:nth-child(2),
+.table th:nth-child(3),
+.table td:nth-child(2),
+.table td:nth-child(3) {
+  text-align: center;
+}
+
+/* Actions area */
+.table td:last-child {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  white-space: nowrap;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}

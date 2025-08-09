@@ -1,0 +1,66 @@
+/* Div-based table component used by categories index
+   Provides a simple grid with 4 columns: Name | Active | Display Order | Actions */
+
+.table {
+  width: 100%;
+}
+
+.table__header {
+  border-bottom: 1px solid var(--color-gray-300);
+  background: var(--color-gray-100);
+}
+
+/* Rows are grids so header and body align */
+.table__row {
+  display: grid;
+  grid-template-columns: 1fr 90px 130px auto;
+  align-items: center;
+}
+
+/* General cell padding */
+.table__cell {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Header cells */
+.table__cell--head {
+  font-weight: 600;
+  color: var(--color-gray-800);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+}
+
+/* Body row separators and hovers */
+.table__body .table__row {
+  border-bottom: 1px solid var(--color-gray-300);
+}
+
+.table__body .table__row:hover {
+  background-color: var(--color-gray-100);
+}
+
+/* Center the Active and Display Order columns */
+.table__row > .table__cell:nth-child(2),
+.table__row > .table__cell:nth-child(3) {
+  text-align: center;
+}
+
+/* Actions area */
+.table__row > .table__cell:last-child {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* Ensure inline delete form doesn't stretch */
+.table__row > .table__cell:last-child form {
+  display: inline-block;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .table__row {
+    grid-template-columns: 1fr 70px 90px auto;
+  }
+}

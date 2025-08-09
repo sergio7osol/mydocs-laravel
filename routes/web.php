@@ -5,8 +5,15 @@ use App\Models\User;
 use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\CategoryController;
 
 Route::resource('documents', DocumentController::class);
+
+Route::resource('categories', CategoryController::class)->except(['show']);
+// Categories: show documents within a category (numeric id only to avoid conflicts with create/edit)
+Route::get('/categories/{category}', [CategoryController::class, 'show'])
+    ->whereNumber('category')
+    ->name('categories.show');
 
 Route::get('/documents/{doc}/download', function (Document $doc) {
 

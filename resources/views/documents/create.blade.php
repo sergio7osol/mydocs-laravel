@@ -64,7 +64,7 @@
               <select name="category_id" id="category_id"
                 class="upload-form__line-input {{ $errors->has('category_id') ? 'is-invalid' : '' }}" required>
                 @foreach ($categories as $id => $name)
-                <option value="{{ $id }}" {{ old('category_id', $currentCategory ?? '') == $id ? 'selected' : '' }}>
+                <option value="{{ $id }}" {{ (string) old('category_id', $selectedCategoryId ?? '') === (string) $id ? 'selected' : '' }}>
                   {{ $name }}
                 </option>
                 @endforeach

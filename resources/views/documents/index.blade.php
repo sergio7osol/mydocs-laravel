@@ -48,9 +48,7 @@
 					@endif
 					<input type="text" name="search" placeholder="Search documents..." value="{{ isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' }}" class="form-control">
 					<button type="submit" class="btn btn--primary">Search</button>
-					<a
-						href="/document/create{{ isset($currentUserId) ? '?user_id=' . $currentUserId : '' }}{{ isset($currentCategory) && !empty($currentCategory) ? '&category=' . urlencode($currentCategory) : '' }}"
-						class="upload-button">Upload Document</a>
+					<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="upload-button">Upload Document</a>
 				</form>
 			</div>
 		</div>
@@ -62,15 +60,14 @@
 					<div class="document-icon">📄</div>
 					<p>No documents found in category "{{ htmlspecialchars($currentCategory) }}".</p>
 					<p class="sub-message">Upload a document to this category to see it here.</p>
-					<a href="/document/create{{ isset($currentUserId) ? '?user_id=' . $currentUserId : '' }}&category={{ urlencode($currentCategory) }}" class="btn-primary">Upload to this
-						category</a>
+					<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="btn-primary">Upload to this category</a>
 				</div>
 			@else
 				<div class="empty-state">
 					<div class="document-icon">📄</div>
 					<p>No documents found.</p>
 					<p class="sub-message">Start by uploading a document using the form below.</p>
-					<a href="/document/create{{ isset($currentUserId) ? '?user_id=' . $currentUserId : '' }}" class="btn-primary">Upload a document</a>
+					<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="btn-primary">Upload a document</a>
 				</div>
 			@endif
 		@else
@@ -143,7 +140,7 @@
 			</div>
 
 			<div class="document-upload">
-				<a href="/documents/create{{ isset($currentUserId) ? '?user_id=' . $currentUserId : '' }}&category={{ urlencode($currentCategory) }}" class="btn btn--primary">
+				<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="btn btn--primary">
 					➕ Upload New Document
 				</a>
 			</div>
