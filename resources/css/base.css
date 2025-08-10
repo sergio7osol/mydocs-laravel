@@ -656,115 +656,56 @@ h2 {
     margin: 0;
 }
 
-.document-counter {
-    position: relative;
-    display: inline-block;
-    margin-left: 25px;
-    transform: translateY(-2px);
-}
-
-.document-counter-inner {
-    display: flex;
-    flex-direction: column;
+/* Inline badge for document count in header (All Documents only) */
+.category-header .document-count--all {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 110px;
-    height: 55px;
-    background: linear-gradient(135deg, #4a6da7 0%, #344e7a 100%);
-    border-radius: 8px;
-    box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.3),
-        0 1px 0 rgba(255, 255, 255, 0.2) inset,
-        0 -2px 0 rgba(0, 0, 0, 0.3) inset;
-    padding: 5px;
-    transform: perspective(200px) rotateX(5deg);
-    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    position: relative;
-    z-index: 1;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-}
-
-.document-counter-inner:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 40%,
-            rgba(0, 0, 0, 0.1) 100%);
-    z-index: -1;
-}
-
-.document-counter-inner:after {
-    content: "";
-    position: absolute;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
-    top: -25%;
-    left: -25%;
-    opacity: 0;
-    z-index: 2;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-}
-
-.counter-number {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+    gap: 0.55rem;
+    margin-left: var(--spacing-sm);
+    padding: .5rem;
+    border-radius: .5rem;
+    border: 1px solid rgba(74, 109, 167, 0.35);
+    color: #4a6da7;
+    font-weight: 600;
     line-height: 1;
-    letter-spacing: 1px;
-    position: relative;
-    z-index: 3;
+    font-size: 1rem;
+    box-shadow: 0 0 0 1px rgba(74, 109, 167, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    vertical-align: middle;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
-.counter-text {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.8);
+.category-header .document-count--all:hover {
+    box-shadow: 0 0 0 1px rgba(74, 109, 167, 0.18), 0 3px 8px rgba(74, 109, 167, 0.18);
+    transform: translateY(-1px);
+}
+
+.category-header .document-count--all .count-num {
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    font-size: 2rem;
+    color: #2f4f8f;
+    background: rgba(74, 109, 167, 0.08);
+    padding: 0.5rem;
+    border-radius: 100%;
+    border: 1px solid rgba(74, 109, 167, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    line-height: 1.05;
+    min-width: 1.75em;
+    text-align: center;
+    transition: background-color 0.4s ease;
+}
+
+.category-header .document-count--all:hover .count-num {
+    background: rgba(74, 109, 167, 0.12);
+    border-color: rgba(74, 109, 167, 0.35);
+}
+
+.category-header .document-count--all .count-label {
+    font-size: .95rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 2px;
-    position: relative;
-    z-index: 3;
-}
-
-.document-counter:hover .document-counter-inner {
-    transform: perspective(200px) rotateX(0deg);
-    box-shadow:
-        0 6px 20px rgba(0, 0, 0, 0.4),
-        0 1px 0 rgba(255, 255, 255, 0.3) inset,
-        0 -2px 0 rgba(0, 0, 0, 0.4) inset;
-    background: linear-gradient(135deg, #5680c0 0%, #3a568a 100%);
-}
-
-.document-counter:hover .document-counter-inner:after {
-    opacity: 1;
-}
-
-.document-counter:before {
-    content: "";
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.2);
-    filter: blur(4px);
-    z-index: 0;
-    transition: all 0.3s ease;
-}
-
-.document-counter:hover:before {
-    width: 100px;
-    opacity: 0.7;
+    letter-spacing: 0.09em;
+    padding-left: 0.55rem;
+    border-left: 1px solid rgba(74, 109, 167, 0.3);
 }
 
 /* Category Actions */

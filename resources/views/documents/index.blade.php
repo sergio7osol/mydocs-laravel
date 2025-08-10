@@ -1,6 +1,9 @@
 <x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$currentUserId" :userDocCounts="$userDocCounts" :currentCategory="$currentCategory" :documents="$documents">
 	@php
-		$documentCount = count($documents);
+		// Show total results for the current query (category/all), not just items on the current page
+		$documentCount = method_exists($documents, 'total')
+			? $documents->total()
+			: (is_countable($documents) ? count($documents) : 0);
 		error_log('Document count in view: ' . $documentCount . ' for user: ' . $currentUserId . ' and category: ' . ($currentCategory ?? 'All'));
 	@endphp
 	<div class="content">
@@ -15,28 +18,24 @@
 				<div class="category-header">
 					<h2>
 						Category: {{ htmlspecialchars($currentCategory) }}
-						<div class="document-counter">
-							<div class="document-counter-inner">
-								<span class="counter-number">{{ $documentCount }}</span>
-								<span class="counter-text">DOCUMENTS</span>
-							</div>
-						</div>
 					</h2>
-					<a href="/?route=list&user_id={{ $currentUserId }}" class="show-all-btn">
+					<a href="{{route('documents.index')}}" class="show-all-btn">
 						📄 Show All Documents
 					</a>
+					<span class="document-count document-count--all document-category">
+						<span class="count-num">{{ $documentCount }}</span>
+						<span class="count-label">documents</span>
+					</span>
 				</div>
 			@else
 				<div class="category-header">
 					<h2>
 						All Documents
-						<div class="document-counter">
-							<div class="document-counter-inner">
-								<span class="counter-number">{{ $documentCount }}</span>
-								<span class="counter-text">DOCUMENTS</span>
-							</div>
-						</div>
 					</h2>
+					<span class="document-count document-count--all document-category">
+						<span class="count-num">{{ $documentCount }}</span>
+						<span class="count-label">documents</span>
+					</span>
 				</div>
 			@endif
 			<div class="search-container">
