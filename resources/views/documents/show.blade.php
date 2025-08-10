@@ -74,15 +74,15 @@
           <p class="document-view__file-path">
             <strong>File Path:</strong>
             <span class="path-container">
-              <code id="filePath" class="copyable-path" data-path="{{ $windowsFilePath ?? $document->file_path }}"
+              <code id="filePath" class="copyable-path" data-path="{{ $filePublicUrl }}"
                 data-dir-path="{{ $windowsDirectoryPath ?? dirname($document->file_path) }}"
-              title="Click buttons to copy paths">
-                {{ $localPath ?? $document->file_path }}
+              title="Click buttons to copy URL or folder path">
+                {{ $displayPath ?? $document->file_path }}
               </code>
           </span>
         <div class="copy-buttons">
-          <button id="copyFileBtn" class="copy-btn" title="Copy file path to clipboard">
-            📄 Copy File Path
+          <button id="copyFileBtn" class="copy-btn" title="Copy file URL to clipboard">
+            📄 Copy File URL
           </button>
           <button id="copyDirBtn" class="copy-btn" title="Copy directory path to clipboard">
             📁 Copy Folder Path
@@ -170,13 +170,17 @@
     </div>
 
     <section class="document-actions">
+      <a href="{{ $filePublicUrl }}" target="_blank" class="document-actions__btn document-actions__btn--view">
+        <span class="document-actions__icon">👁️</span>
+        <span class="document-actions__text">View</span>
+      </a>
       <a href="{{ route('documents.edit', $document) }}" class="document-actions__btn document-actions__btn--edit">
         <span class="document-actions__icon">✏️</span>
-        <span class="document-actions__text">Edit Document</span>
+        <span class="document-actions__text">Edit</span>
       </a>
       <a href="{{ route('documents.download', $document) }}" class="document-actions__btn document-actions__btn--download">
         <span class="document-actions__icon">📥</span>
-        <span class="document-actions__text">Download Document</span>
+        <span class="document-actions__text">Download</span>
       </a>
       <form method="POST" action="{{ route('documents.destroy', $document) }}" class="document-actions__form"
         onsubmit="return confirm('Are you sure you want to delete this document?');" onclick="event.stopPropagation();">
@@ -189,7 +193,7 @@
         <button type="submit" class="document-actions__btn document-actions__btn--delete" title="Delete document"
           onclick="event.stopPropagation();">
           <span class="document-actions__icon">🗑️</span>
-          <span class="document-actions__text">Delete Document</span>
+          <span class="document-actions__text">Delete</span>
         </button>
       </form>
     </section>

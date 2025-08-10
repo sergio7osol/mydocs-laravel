@@ -1489,6 +1489,7 @@ h2 {
 }
 
 .document-actions__btn {
+    flex-grow: 1;
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);

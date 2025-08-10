@@ -49,12 +49,24 @@ class DocumentController extends Controller
   }
 
   public function show(Document $document) {
+    // Build paths/URLs for UI copy and view actions
+    $filePublicUrl = asset('storage/' . ltrim($document->file_path ?? '', '/'));
+    $windowsFilePath = $document->file_path
+      ? Storage::disk('public')->path($document->file_path)
+      : null;
+    $windowsDirectoryPath = $windowsFilePath ? dirname($windowsFilePath) : null;
+    $displayPath = 'storage/' . ltrim($document->file_path ?? '', '/');
+
     return view('documents.show', [
       'pageTitle' => 'Document details',
       'document' => $document,
       'users' => User::all(),
       'userDocCounts' => [],
       'documents' => collect([$document]),
+      'filePublicUrl' => $filePublicUrl,
+      'windowsFilePath' => $windowsFilePath,
+      'windowsDirectoryPath' => $windowsDirectoryPath,
+      'displayPath' => $displayPath,
     ]);
   }
 
