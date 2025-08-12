@@ -6,6 +6,8 @@ use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\RegisteredUserController;
+use App\Http\Controllers\SessionController;
 
 Route::resource('documents', DocumentController::class);
 
@@ -33,10 +35,10 @@ Route::get('/users/{user}', function (User $user) {
 	]);
 })->name('users.show');
 
-Route::view('/register', 'register', [
-	'pageTitle' => 'Register',
-	'users' => [],
-	'currentUserId' => null,
-	'userDocCounts' => [],
-	'currentCategory' => '',
-])->name('register');
+// Auth
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('auth.register');
+Route::post('/register', [RegisteredUserController::class, 'store'])->name('auth.register');
+	
+Route::get('/login', [SessionController::class, 'create'])->name('auth.login');
+Route::post('/login', [SessionController::class, 'store'])->name('auth.login');
+Route::post('/logout', [SessionController::class, 'destroy'])->name('auth.logout');

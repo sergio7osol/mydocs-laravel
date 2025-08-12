@@ -8,25 +8,32 @@
 <header class="main-header">
     <h1><a href="{{route('documents.index')}}" class="main-header__title">MyDocs Document Management</a></h1>
     <div class="user-selector">
-        <span class="user-status">{{ isset($_SESSION['user']) ? ($_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name']) : 'Guest' }}</span>
+        <span class="user-status">
+            @auth
+                {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
+            @else
+                Guest
+            @endauth
+        </span>
 
-        @if(!empty($_SESSION) && $_SESSION['user'] ?? false)
+        @auth
         <div class="user-avatar">
             <div class="user-avatar__image-container">
-                <img src="/img/user-avatar-256x256.jpg" alt="User Avatar" class="user-avatar__image">
+                <img src="/img/avatar.svg" alt="User Avatar" class="user-avatar__image">
             </div>
         </div>
-        <form action="/sessions" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
+        <form action="/logout" method="POST">
+            @csrf
             <button type="submit" class="auth-links__link">Log Out</button>
         </form>
-        @else
-        <ul class="auth-links">
-            <li><a href="/sessions" class="auth-links__link {{request()->is('/sessions') ? 'auth-links__link--active' : ''}}">Log In</a></li>
-            <li><a href="/register" class="auth-links__link {{request()->is('/register') ? 'auth-links__link--active' : ''}}">Register</a></li>
-        </ul>
+        @endauth
 
-        @endif
+        @guest
+        <ul class="auth-links">
+            <li><a href="/login" class="auth-links__link {{request()->is('login') ? 'auth-links__link--active' : ''}}">Log In</a></li>
+            <li><a href="/register" class="auth-links__link {{request()->is('register') ? 'auth-links__link--active' : ''}}">Register</a></li>
+        </ul>
+        @endguest
 
         @foreach ($users as $user)
         <div class="{{ ($currentUserId == $user['id']) ? 'active' : '' }}">

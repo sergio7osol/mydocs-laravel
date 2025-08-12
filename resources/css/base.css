@@ -113,7 +113,6 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: var(--spacing-sm);
 }
 
 .user-avatar__image-container {
@@ -132,7 +131,7 @@ h2 {
 }
 
 .user-avatar__image-container:hover {
-    transform: scale(1.05);
+    transform: scale(1.49);
     border-color: var(--color-white);
     box-shadow: var(--avatar-hover-shadow);
 }
@@ -140,7 +139,7 @@ h2 {
 .user-avatar__image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
@@ -597,6 +596,16 @@ h2 {
     background-color: #218838;
     text-decoration: none;
     color: white;
+}
+
+/* Links in form clarification text - underlined by default, no underline on hover */
+.upload-form__line-clarification a {
+    text-decoration: underline;
+    transition: text-decoration 0.2s ease;
+}
+
+.upload-form__line-clarification a:hover {
+    text-decoration: none;
 }
 
 /* Empty state styling */
