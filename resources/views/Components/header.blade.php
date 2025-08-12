@@ -35,16 +35,17 @@
         </ul>
         @endguest
 
-        @foreach ($users as $user)
-        <div class="{{ ($currentUserId == $user['id']) ? 'active' : '' }}">
-            <a href="/?route=list&user_id={{ $user['id'] }} {{ isset($currentCategory) && !empty($currentCategory) ? '&category=' . htmlspecialchars($currentCategory) : '' }}" id="user-{{ $user['id'] }}" class="user-button">
-                <span>{{ htmlspecialchars($user['first_name']) }}</span>
-                <span class="user-button__icon">
-                    {{ $userDocCounts[$user['id']] ?? 0 }}
-                </span>
-            </a>
-        </div>
-        @endforeach
+        <ul class="user-list">
+            @foreach ($users as $user)
+            <li class="user-list__item {{ ($currentUserId == $user['id']) ? 'user-list__item--active' : '' }}">
+                <a href="/?route=list&user_id={{ $user['id'] }} {{ isset($currentCategory) && !empty($currentCategory) ? '&category=' . htmlspecialchars($currentCategory) : '' }}" id="user-{{ $user['id'] }}" class="user-list__link">
+                    <span class="user-list__name">{{ htmlspecialchars($user['first_name']) }}</span>
+                    <span class="user-list__count">
+                        {{ $userDocCounts[$user['id']] ?? 0 }}
+                    </span>
+                </a>
+            </li>
+            @endforeach
+        </ul>
     </div>
 </header>
-
