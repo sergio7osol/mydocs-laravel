@@ -13,14 +13,12 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /** Show the registration form. */
     public function create(): View {
         return view('auth.register');
     }
 
-    /** Handle an incoming registration request. */
     public function store(Request $request): RedirectResponse {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:50'],
             'last_name' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:100', 'unique:users'],
@@ -28,10 +26,10 @@ class RegisteredUserController extends Controller
         ]); 
 
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         Auth::login($user);

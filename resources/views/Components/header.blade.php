@@ -22,7 +22,7 @@
                 <img src="/img/avatar.svg" alt="User Avatar" class="user-avatar__image">
             </div>
         </div>
-        <form action="/logout" method="POST">
+        <form action="{{ route('auth.logout') }}" method="POST">
             @csrf
             <button type="submit" class="auth-links__link">Log Out</button>
         </form>

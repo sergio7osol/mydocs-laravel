@@ -10,12 +10,10 @@ use Illuminate\View\View;
 
 class SessionController extends Controller
 {
-    /** Show the login form. */
     public function create(): View {
         return view('auth.login');
     }
 
-    /** Handle an incoming authentication request. */
     public function store(Request $request): RedirectResponse {
         $credentials = $request->validate([
             'email' => ['required', 'string', 'email'],
@@ -33,13 +31,13 @@ class SessionController extends Controller
         ]);
     }
 
-    /** Log the user out of the application. */
     public function destroy(Request $request): RedirectResponse {
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')->with('message', 'You have been logged out.');
+        return redirect()->route('auth.login')->with('message', 'You have been logged out.');
     }
 }
+ 
