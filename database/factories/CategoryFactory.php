@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -31,6 +32,7 @@ class CategoryFactory extends Factory
 
         return [
             'name' => fake()->randomElement($categoryNames),
+            'user_id' => User::factory(),
             'parent_id' => null, // Root category by default
             'path' => null, // Root categories have no path
             'level' => 0, // Root level

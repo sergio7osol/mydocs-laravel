@@ -5,12 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class SessionController extends Controller
 {
-    public function create(): View {
+    public function create(Request $request): View {
+        // If a specific return URL is provided, save it as the intended URL
+        if ($request->filled('return')) {
+            $return = (string) $request->query('return');
+            // Allow only same-origin redirects to prevent open-redirects
+            if (Str::startsWith($return, url('/'))) {
+                $request->session()->put('url.intended', $return);
+            }
+        }
+
         return view('auth.login');
     }
 

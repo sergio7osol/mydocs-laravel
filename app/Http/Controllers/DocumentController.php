@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Document;
 use App\Models\User;
 use App\Models\Category;
@@ -17,7 +19,7 @@ class DocumentController extends Controller
       'pageTitle' => 'Documents list',
       'documents' => $documents,
       'users' => User::all(),
-      'currentUserId' => 1,
+      'currentUserId' => Auth::id(),
       'userDocCounts' => $documents->pluck('user_id', 'documents_count')->toArray(),
       'currentCategory' => null,
       'currentCategoryId' => null,
@@ -41,7 +43,7 @@ class DocumentController extends Controller
     return view('documents.create', [
       'pageTitle' => 'Create document',
       'users' => User::all(),
-      'currentUserId' => 1,
+      'currentUserId' => Auth::id(),
       'categories' => Category::pluck('name', 'id'),
       'currentCategory' => null,
       'selectedCategoryId' => $selectedCategoryId,
@@ -76,7 +78,6 @@ class DocumentController extends Controller
       'description'  => 'nullable|string|max:300',
       'created_date' => 'nullable|date',
       'category_id'  => 'required|exists:categories,id',
-      'user_id'      => 'required|exists:users,id',
       'document'     => 'required|file|mimes:pdf,doc,docx,txt,xls,xlsx,jpg,png,gif|max:15360', // 15 MB max
     ]);
   
@@ -92,7 +93,7 @@ class DocumentController extends Controller
         'description'  => $validated['description'],
         'created_date' => $validated['created_date'],
         'category_id'  => $validated['category_id'],
-        'user_id'      => $validated['user_id'],
+        'user_id'      => Auth::id(),
         'filename'     => $filename,
         'file_path'    => $path,
         'file_size'    => $file->getSize(),
@@ -111,16 +112,18 @@ class DocumentController extends Controller
       'document' => $document,
       'users' => User::all(),
       'categories' => Category::pluck('name', 'id'),
+      'currentUserId' => Auth::id(),
     ]);
   }
 
   public function update(Request $request, Document $document) {
+    Gate::authorize('edit-document', $document);
+    
     $validated = $request->validate([
       'title'        => 'required|string|max:70',
       'description'  => 'nullable|string|max:300',
       'created_date' => 'nullable|date',
       'category_id'  => 'required|exists:categories,id',
-      'user_id'      => 'required|exists:users,id',
       'document'     => 'nullable|file|mimes:pdf,doc,docx,txt,xls,xlsx,jpg,png,gif|max:15360', // Optional for updates
     ]);
   
@@ -130,7 +133,6 @@ class DocumentController extends Controller
       $document->description = $validated['description'];
       $document->created_date = $validated['created_date'];
       $document->category_id = $validated['category_id'];
-      $document->user_id = $validated['user_id'];
   
       // Handle file replacement if new file uploaded
       if ($request->hasFile('document')) {
@@ -159,6 +161,8 @@ class DocumentController extends Controller
   }
 
   public function destroy(Document $document) {
+    Gate::authorize('delete-document', $document);
+    
     $document->delete();
 
     return redirect()->route('documents.index')->with('message', 'Document deleted successfully!');

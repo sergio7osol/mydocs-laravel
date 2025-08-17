@@ -41,7 +41,6 @@
 			<div class="search-container">
 				<form action="/" method="GET" class="search-form">
 					<input type="hidden" name="route" value="list">
-					<input type="hidden" name="user_id" value="{{ $currentUserId }}">
 					@if (isset($currentCategory) && !empty($currentCategory))
 						<input type="hidden" name="category" value="{{ htmlspecialchars($currentCategory) }}">
 					@endif
@@ -117,19 +116,24 @@
 							</div>
 						</div>
 						<div class="document-item__actions">
-              <a href="{{ route('documents.edit', $doc) }}" class="document-item__btn document-item__btn--edit">
-								✏️
-							</a>
-							<form method="POST" action="{{ route('documents.destroy', $doc) }}" onsubmit="return confirm('Are you sure you want to delete this document?');" onclick="event.stopPropagation();">
-								@csrf
-								@method('DELETE')
-								<input type="hidden" name="user_id" value="{{ $currentUserId }}">
-								@if (isset($currentCategory))
-									<input type="hidden" name="category" value="{{ htmlspecialchars($currentCategory) }}">
-								@endif
-								<button type="submit" class="document-item__btn document-item__btn--delete" title="Delete document" onclick="event.stopPropagation();">🗑️</button>
-							</form>
-						</div>
+									@can('edit-document', $doc)
+										<a href="{{ route('documents.edit', $doc) }}" class="document-item__btn document-item__btn--edit">
+											✏️
+										</a>
+									@endcan
+									@can('delete-document', $doc)
+									<form method="POST" action="{{ route('documents.destroy', $doc) }}" onsubmit="return confirm('Are you sure you want to delete this document?');" onclick="event.stopPropagation();">
+									@csrf
+									
+									@method('DELETE')
+
+									@if (isset($currentCategory))
+										<input type="hidden" name="category" value="{{ htmlspecialchars($currentCategory) }}">
+									@endif
+									<button type="submit" class="document-item__btn document-item__btn--delete" title="Delete document" onclick="event.stopPropagation();">🗑️</button>
+								</form>
+								@endcan
+							</div>
 					</div>
 				@endforeach
 

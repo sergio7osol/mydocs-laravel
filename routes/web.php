@@ -9,7 +9,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 
-Route::resource('documents', DocumentController::class);
+// Documents (explicit routes instead of resource)
+Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create')->middleware('auth');
+Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store')->middleware('auth');
+Route::get('/documents/{document}', [DocumentController::class, 'show'])->name('documents.show');
+Route::get('/documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit')->middleware('auth')->can('edit-document', 'document');
+Route::patch('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update')->middleware('auth')->can('edit-document', 'document');
+Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy')->middleware('auth')->can('delete-document', 'document');
 
 Route::resource('categories', CategoryController::class)->except(['show']);
 // Categories: show documents within a category (numeric id only to avoid conflicts with create/edit)
@@ -26,7 +33,7 @@ Route::get('/documents/{doc}/download', function (Document $doc) {
 
 	// Return file download response
 	return response()->download(Storage::disk('public')->path($doc->file_path), $doc->filename);
-})->name('documents.download');
+})->middleware('auth')->name('documents.download');
 
 Route::get('/users/{user}', function (User $user) {
 	return view('users.show', [

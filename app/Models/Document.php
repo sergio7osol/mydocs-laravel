@@ -42,9 +42,6 @@ class Document extends Model {
         return $this->belongsToMany(Tag::class);
     }
 
-    /**
-     * Get human readable file size
-     */
     public function getFileSizeHumanAttribute(): string {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
         $bytes = max(0, $this->file_size); // Prevent negative values
@@ -60,34 +57,22 @@ class Document extends Model {
         return round($bytes, 2) . ' ' . $units[$i];
     }
 
-    /**
-     * Check if the document is a specific file type
-     */
     public function isFileType(string $type): bool {
         return stripos($this->file_type, $type) !== false;
     }
 
-    /**
-     * Scope to filter by file type
-     */
-    public function scopeOfType($query, string $type)
-    {
+    /** Scope to filter by file type */
+    public function scopeOfType($query, string $type) {
         return $query->where('file_type', 'like', "%{$type}%");
     }
 
-    /**
-     * Scope to filter by user
-     */
-    public function scopeByUser($query, int $userId)
-    {
+    /** Scope to filter by user */
+    public function scopeByUser($query, int $userId) {
         return $query->where('user_id', $userId);
     }
 
-    /**
-     * Resolve route binding with eager loaded relationships
-     */
-    public function resolveRouteBinding($value, $field = null)
-    {
+    /** Resolve route binding with eager loaded relationships */
+    public function resolveRouteBinding($value, $field = null) {
         return $this->with(['category', 'user'])->find($value);
     }
 }

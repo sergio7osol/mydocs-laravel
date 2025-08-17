@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -107,6 +108,7 @@ class CategoryController extends Controller
 
         $category = Category::create([
             'name' => $validated['name'],
+            'user_id' => Auth::id(),
             'parent_id' => $validated['parent_id'] ?? null,
             'path' => $path,
             'level' => $level,

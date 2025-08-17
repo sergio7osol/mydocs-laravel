@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -11,6 +13,7 @@ class Category extends Model
 
     protected $fillable = [
         'name',
+        'user_id',
         'parent_id',
         'path',
         'level',
@@ -20,112 +23,82 @@ class Category extends Model
 
     protected $casts = [
         'id' => 'integer',
+        'user_id' => 'integer',
         'parent_id' => 'integer',
         'level' => 'integer',
         'is_active' => 'boolean',
         'display_order' => 'integer',
     ];
 
-    /**
-     * Get the parent category
-     */
-    public function parent()
-    {
+    /** Get the parent category */
+    public function parent(): BelongsTo {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    /**
-     * Get the child categories
-     */
-    public function children()
-    {
+    /** Get the child categories */
+    public function children(): HasMany {
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    // Get the documents in this category
-    public function documents() {
+    /** Get the documents in this category */
+    public function documents(): HasMany {
         return $this->hasMany(Document::class);
     }
 
-    /**
-     * Get all descendants (children, grandchildren, etc.)
-     */
-    public function descendants()
-    {
+    /** Get the user who created this category */
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    /** Get all descendants (children, grandchildren, etc.) */
+    public function descendants(): HasMany {
         return $this->hasMany(Category::class, 'parent_id')->with('descendants');
     }
 
-    /**
-     * Get all ancestors (parent, grandparent, etc.)
-     */
-    public function ancestors()
-    {
+    /** Get all ancestors (parent, grandparent, etc.) */
+    public function ancestors() {
         return $this->parent ? $this->parent->ancestors()->prepend($this->parent) : collect();
     }
 
-    /**
-     * Get the root category
-     */
-    public function root()
-    {
+    /** Get the root category */
+    public function root() {
         return $this->parent ? $this->parent->root() : $this;
     }
 
-    /**
-     * Check if this category is a root category
-     */
-    public function isRoot()
-    {
+    /** Check if this category is a root category */
+    public function isRoot() {
         return is_null($this->parent_id);
     }
 
-    /**
-     * Check if this category has children
-     */
-    public function hasChildren()
-    {
+    /** Check if this category has children */
+    public function hasChildren() {
         return $this->children()->exists();
     }
 
-    /**
-     * Get the full category path as names
-     */
-    public function getFullPathAttribute()
-    {
+    /** Get the full category path as names */
+    public function getFullPathAttribute() {
         $path = $this->ancestors()->pluck('name')->toArray();
         $path[] = $this->name;
         return implode(' > ', $path);
     }
 
-    /**
-     * Scope to get only root categories
-     */
-    public function scopeRoots($query)
-    {
+    /** Scope to get only root categories */
+    public function scopeRoots($query) {
         return $query->whereNull('parent_id');
     }
 
-    /**
-     * Scope to get only active categories
-     */
-    public function scopeActive($query)
-    {
+    /** Scope to get only active categories */
+    public function scopeActive($query) {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope to get categories at a specific level
-     */
-    public function scopeAtLevel($query, $level)
-    {
+    /** Scope to get categories at a specific level */
+    public function scopeAtLevel($query, $level) {
         return $query->where('level', $level);
     }
 
-    /**
-     * Scope to order by display order
-     */
-    public function scopeOrdered($query)
-    {
+    /** Scope to order by display order */
+    public function scopeOrdered($query) {
         return $query->orderBy('display_order')->orderBy('name');
     }
 }

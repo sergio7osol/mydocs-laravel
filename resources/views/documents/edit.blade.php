@@ -1,4 +1,4 @@
-<x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$document->user_id" :currentCategory="$document->category_id">
+<x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$currentUserId" :currentCategory="$document->category_id">
   <div class="upload-box">
     <div class="upload-form__container">
       @if ($errors->any())
@@ -24,7 +24,7 @@
             @csrf
             @method('PATCH')
 
-            <input type="hidden" name="user_id" value="{{ $document->user_id }}">
+
 
             <div class="upload-form__line">
               <label for="title" class="upload-form__line-title">Document Title:</label>

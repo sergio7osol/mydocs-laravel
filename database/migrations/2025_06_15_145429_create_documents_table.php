@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('file_path', 255);
             $table->integer('file_size');
             $table->string('file_type', 50);
-            $table->foreignIdFor(\App\Models\User::class);
+            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->date('created_date')->nullable();
             $table->mediumText('description')->nullable();
-            $table->foreignIdFor(\App\Models\Category::class);
+            $table->foreignIdFor(\App\Models\Category::class)->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

@@ -23,7 +23,6 @@
           <form action="/documents" class="upload-form" enctype="multipart/form-data" method="POST">
             @csrf
 
-            <input type="hidden" name="user_id" value="{{ $currentUserId }}">
 
             <div class="upload-form__line">
               <label for="title" class="upload-form__line-title">Document Title:</label>

@@ -1,5 +1,5 @@
 <x-layout :pageTitle="$pageTitle">
-    <div class="content">
+    <div class="content category-manager">
         @if (session('message'))
             <div class="upload-form__alert upload-form__alert--success">
                 {{ session('message') }}
@@ -18,7 +18,7 @@
 
         <div class="content-header">
             <h1 class="page-title">Categories management</h1>
-            <a class="btn btn--primary" href="{{ route('categories.create') }}">➕ New Category</a>
+            <a class="btn btn--primary btn--add" href="{{ route('categories.create') }}">➕ New Category</a>
         </div>
 
         <table class="table">
