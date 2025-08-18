@@ -27,7 +27,7 @@ class CategoryController extends Controller
 
         $categoryIds = $descendantIds->push($category->id)->unique()->all();
 
-        $documents = Document::with('category')
+        $documents = Document::with(['category', 'user'])
             ->whereIn('category_id', $categoryIds)
             ->latest()
             ->paginate(5);
@@ -36,11 +36,16 @@ class CategoryController extends Controller
             'pageTitle' => 'Category: ' . $category->name,
             'documents' => $documents,
             'users' => User::all(),
-            'currentUserId' => 1,
-            'userDocCounts' => [],
+            'currentUserId' => Auth::id(),
+            'userDocCounts' => Document::selectRaw('user_id, COUNT(*) as total')
+                ->whereIn('category_id', $categoryIds)
+                ->groupBy('user_id')
+                ->pluck('total', 'user_id')
+                ->toArray(),
             // For display texts in views, keep the human-readable name
             'currentCategory' => $category->name,
             'currentCategoryId' => $category->id,
+            'canUploadToCurrentCategory' => (Auth::check() && (Auth::user()?->is_admin || $category->user_id === Auth::id())),
         ]);
     }
 

@@ -9,20 +9,27 @@ use App\Models\Document;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DocumentController extends Controller
 {
   public function index() {
-    $documents = Document::with('category')->latest()->paginate(5);
+    $documents = Document::with(['category', 'user'])->latest()->paginate(5);
 
     return view('documents.index', [
       'pageTitle' => 'Documents list',
       'documents' => $documents,
       'users' => User::all(),
       'currentUserId' => Auth::id(),
-      'userDocCounts' => $documents->pluck('user_id', 'documents_count')->toArray(),
+      // Document counts per user across all documents (for header badges)
+      'userDocCounts' => Document::selectRaw('user_id, COUNT(*) as total')
+        ->groupBy('user_id')
+        ->pluck('total', 'user_id')
+        ->toArray(),
       'currentCategory' => null,
       'currentCategoryId' => null,
+      // On All Documents page, uploads are allowed (UI-wise) for authenticated users
+      'canUploadToCurrentCategory' => Auth::check(),
     ]);
   }
 
@@ -40,11 +47,18 @@ class DocumentController extends Controller
       }
     }
 
+    // Build categories list: admins see all; non-admins see only their own categories
+    $categoriesQuery = Category::query();
+    if (!Auth::user()?->is_admin) {
+      $categoriesQuery->where('user_id', Auth::id());
+    }
+    $categories = $categoriesQuery->orderBy('name')->pluck('name', 'id');
+
     return view('documents.create', [
       'pageTitle' => 'Create document',
       'users' => User::all(),
       'currentUserId' => Auth::id(),
-      'categories' => Category::pluck('name', 'id'),
+      'categories' => $categories,
       'currentCategory' => null,
       'selectedCategoryId' => $selectedCategoryId,
     ]);
@@ -73,11 +87,16 @@ class DocumentController extends Controller
   }
 
   public function store(Request $request) {
+    // Enforce category ownership for non-admins via validation
+    $categoryRule = Auth::user()?->is_admin
+      ? ['required', Rule::exists('categories', 'id')]
+      : ['required', Rule::exists('categories', 'id')->where(fn ($q) => $q->where('user_id', Auth::id()))];
+
     $validated = $request->validate([
       'title'        => 'required|string|max:70',
       'description'  => 'nullable|string|max:300',
       'created_date' => 'nullable|date',
-      'category_id'  => 'required|exists:categories,id',
+      'category_id'  => $categoryRule,
       'document'     => 'required|file|mimes:pdf,doc,docx,txt,xls,xlsx,jpg,png,gif|max:15360', // 15 MB max
     ]);
   
@@ -107,11 +126,25 @@ class DocumentController extends Controller
   }
 
   public function edit(Document $document) {
+    // Build categories list: admins see all; non-admins see only their own categories
+    $categoriesQuery = Category::query();
+    if (!Auth::user()?->is_admin) {
+      $categoriesQuery->where('user_id', Auth::id());
+    }
+    $categories = $categoriesQuery->orderBy('name')->pluck('name', 'id');
+    // If user does not own the document's current category, still include it so they can keep it unchanged
+    if (!Auth::user()?->is_admin && $document->category_id && !$categories->has($document->category_id)) {
+      $currentName = Category::where('id', $document->category_id)->value('name');
+      if ($currentName) {
+        $categories = $categories->put($document->category_id, $currentName . ' (current)');
+      }
+    }
+
     return view('documents.edit', [
       'pageTitle' => 'Edit Document',
       'document' => $document,
       'users' => User::all(),
-      'categories' => Category::pluck('name', 'id'),
+      'categories' => $categories,
       'currentUserId' => Auth::id(),
     ]);
   }
@@ -119,11 +152,16 @@ class DocumentController extends Controller
   public function update(Request $request, Document $document) {
     Gate::authorize('edit-document', $document);
     
+    // Enforce category ownership for non-admins via validation (admin bypass)
+    $categoryRule = Auth::user()?->is_admin
+      ? ['required', Rule::exists('categories', 'id')]
+      : ['required', Rule::exists('categories', 'id')->where(fn ($q) => $q->where('user_id', Auth::id()))];
+
     $validated = $request->validate([
       'title'        => 'required|string|max:70',
       'description'  => 'nullable|string|max:300',
       'created_date' => 'nullable|date',
-      'category_id'  => 'required|exists:categories,id',
+      'category_id'  => $categoryRule,
       'document'     => 'nullable|file|mimes:pdf,doc,docx,txt,xls,xlsx,jpg,png,gif|max:15360', // Optional for updates
     ]);
   
@@ -166,5 +204,28 @@ class DocumentController extends Controller
     $document->delete();
 
     return redirect()->route('documents.index')->with('message', 'Document deleted successfully!');
+  }
+
+  // Stream a file download response
+  public function download(Document $document) {
+    if (!$document->file_path || !Storage::disk('public')->exists($document->file_path)) {
+      return redirect()->back()->withErrors(['document' => 'File not found on server']);
+    }
+
+    return response()->download(
+      Storage::disk('public')->path($document->file_path),
+      $document->filename
+    );
+  }
+
+  // Stream a file inline view response
+  public function viewFile(Document $document) {
+    if (!$document->file_path || !Storage::disk('public')->exists($document->file_path)) {
+      return redirect()->back()->withErrors(['document' => 'File not found on server']);
+    }
+
+    return response()->file(
+      Storage::disk('public')->path($document->file_path)
+    );
   }
 }

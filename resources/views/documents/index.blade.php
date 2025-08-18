@@ -1,4 +1,4 @@
-<x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$currentUserId" :userDocCounts="$userDocCounts" :currentCategory="$currentCategory" :documents="$documents">
+  <x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$currentUserId" :userDocCounts="$userDocCounts" :currentCategory="$currentCategory" :documents="$documents">
 	@php
 		// Show total results for the current query (category/all), not just items on the current page
 		$documentCount = method_exists($documents, 'total')
@@ -46,7 +46,17 @@
 					@endif
 					<input type="text" name="search" placeholder="Search documents..." value="{{ isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' }}" class="form-control">
 					<button type="submit" class="btn btn--primary">Search</button>
-					<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="upload-button">Upload Document</a>
+					@if ($currentUserId)
+						@php
+							$uploadUrl = isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create');
+							$disableUpload = isset($currentCategoryId) && $currentCategoryId && isset($canUploadToCurrentCategory) && !$canUploadToCurrentCategory;
+						@endphp
+						@if ($disableUpload)
+							<a href="{{ $uploadUrl }}" class="upload-button is-disabled-link" aria-disabled="true" title="You can't upload to this category">Upload Document</a>
+						@else
+							<a href="{{ $uploadUrl }}" class="upload-button">Upload Document</a>
+						@endif
+					@endif
 				</form>
 			</div>
 		</div>
@@ -58,14 +68,29 @@
 					<div class="document-icon">📄</div>
 					<p>No documents found in category "{{ htmlspecialchars($currentCategory) }}".</p>
 					<p class="sub-message">Upload a document to this category to see it here.</p>
-					<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="btn-primary">Upload to this category</a>
+					@if ($currentUserId)
+						@php
+							$uploadUrl = isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create');
+							$disableUpload = isset($currentCategoryId) && $currentCategoryId && isset($canUploadToCurrentCategory) && !$canUploadToCurrentCategory;
+						@endphp
+						@if ($disableUpload)
+							<a href="{{ $uploadUrl }}" class="btn-primary is-disabled-link" aria-disabled="true" title="You can't upload to this category">Upload to this category</a>
+						@else
+							<a href="{{ $uploadUrl }}" class="btn-primary">Upload to this category</a>
+						@endif
+					@endif
 				</div>
 			@else
 				<div class="empty-state">
 					<div class="document-icon">📄</div>
 					<p>No documents found.</p>
 					<p class="sub-message">Start by uploading a document using the form below.</p>
-					<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="btn-primary">Upload a document</a>
+					@if ($currentUserId)
+						@php
+							$uploadUrl = route('documents.create');
+						@endphp
+						<a href="{{ $uploadUrl }}" class="btn-primary">Upload a document</a>
+					@endif
 				</div>
 			@endif
 		@else
@@ -143,9 +168,17 @@
 			</div>
 
 			<div class="document-upload">
-				<a href="{{ isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create') }}" class="btn btn--primary">
-					➕ Upload New Document
-				</a>
+				@if ($currentUserId)
+					@php
+						$uploadUrl = isset($currentCategoryId) && $currentCategoryId ? route('documents.create', ['category_id' => $currentCategoryId]) : route('documents.create');
+						$disableUpload = isset($currentCategoryId) && $currentCategoryId && isset($canUploadToCurrentCategory) && !$canUploadToCurrentCategory;
+					@endphp
+					@if ($disableUpload)
+						<a href="{{ $uploadUrl }}" class="btn btn--primary is-disabled-link" aria-disabled="true" title="You can't upload to this category">➕ Upload New Document</a>
+					@else
+						<a href="{{ $uploadUrl }}" class="btn btn--primary">➕ Upload New Document</a>
+					@endif
+				@endif
 			</div>
 		@endif
 	</div>

@@ -1,4 +1,4 @@
-<x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$currentUserId" :currentCategory="$currentCategory">
+ <x-layout :pageTitle="$pageTitle" :users="$users" :currentUserId="$currentUserId" :currentCategory="$currentCategory">
   <div class="upload-box">
     <div class="upload-form__container">
       @if ($errors->any())
@@ -40,7 +40,7 @@
               <div class="upload-form__line-input">
                 <input type="file" name="document" id="document"
                   class="{{ $errors->has('document') ? 'is-invalid' : '' }}" {{ !isset($document) ? 'required' : '' }}
-                  accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx">
+                  accept=".pdf,.doc,.docx,.txt,.xls,.xlsx">
 
                 <div class="upload-form__line-formats">
                   <span class="upload-form__line-format">PDF</span>
@@ -48,7 +48,6 @@
                   <span class="upload-form__line-format">DOCX</span>
                   <span class="upload-form__line-format">TXT</span>
                   <span class="upload-form__line-format">XLS/XLSX</span>
-                  <span class="upload-form__line-format">PPT/PPTX</span>
                   <span class="upload-form__line-size">Max: 15MB</span>
                 </div>
                 @error('document')
