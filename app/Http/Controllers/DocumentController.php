@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use App\Models\Document;
 use App\Models\User;
 use App\Models\Category;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use App\Mail\AccountCreated;
 
 class DocumentController extends Controller
 {
@@ -107,7 +109,7 @@ class DocumentController extends Controller
       $path = $file->storeAs('documents', $filename, 'public'); // Store in storage/app/public/documents
   
       // Create the document record
-      Document::create([
+      $document = Document::create([
         'title'        => $validated['title'],
         'description'  => $validated['description'],
         'created_date' => $validated['created_date'],
@@ -118,6 +120,8 @@ class DocumentController extends Controller
         'file_size'    => $file->getSize(),
         'file_type'    => $file->getMimeType(),
       ]);
+
+      Mail::to($document->category->user)->send(new AccountCreated($document));
   
       return redirect()->route('documents.index')->with('message', 'Document uploaded successfully!');
     } catch (\Exception $e) {
