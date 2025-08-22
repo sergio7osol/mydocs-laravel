@@ -44,3 +44,12 @@ Route::post('/register', [RegisteredUserController::class, 'store'])->name('auth
 Route::get('/login', [SessionController::class, 'create'])->name('auth.login');
 Route::post('/login', [SessionController::class, 'store'])->name('auth.login');
 Route::post('/logout', [SessionController::class, 'destroy'])->name('auth.logout');
+
+// examples 
+Route::get('translate', function () {
+    $document = \App\Models\Document::first();
+
+    \App\Jobs\TranslateJob::dispatch($document);
+    
+    return 'translated';
+});
