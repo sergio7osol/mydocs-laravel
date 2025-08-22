@@ -9,16 +9,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Document;
+use App\Models\User;
 
-class AccountCreated extends Mailable implements ShouldQueue
+class UserRegistered extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public Document $document)
+    public function __construct(public User $user)
     {
         //
     }
@@ -29,7 +29,7 @@ class AccountCreated extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New document uploaded',
+            subject: 'Welcome to MyDocs',
             from: new Address(
                 config('mail.from.address'),
                 config('mail.from.name')
@@ -43,7 +43,7 @@ class AccountCreated extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'mail.account-created',
+            markdown: 'mail.user-registered-md',
         );
     }
 

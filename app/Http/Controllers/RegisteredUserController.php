@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use App\Mail\UserRegistered;
 
 class RegisteredUserController extends Controller
 {
@@ -33,6 +35,8 @@ class RegisteredUserController extends Controller
         ]);
 
         Auth::login($user);
+
+        Mail::to($user)->queue(new UserRegistered($user));
 
         return redirect()->route('documents.index')->with('message', 'Account created successfully!');
     }

@@ -121,7 +121,9 @@ class DocumentController extends Controller
         'file_type'    => $file->getMimeType(),
       ]);
 
-      Mail::to($document->category->user)->send(new AccountCreated($document));
+      Mail::to($document->category->user)->queue(
+        new AccountCreated($document)
+      );
   
       return redirect()->route('documents.index')->with('message', 'Document uploaded successfully!');
     } catch (\Exception $e) {
