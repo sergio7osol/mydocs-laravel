@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import { resolve } from 'path';
 
 export default defineConfig({
     plugins: [
@@ -12,5 +13,10 @@ export default defineConfig({
         outDir: 'public',
         assetsDir: '',
         emptyOutDir: false,
+    },
+    resolve: {
+        alias: {
+            '@': resolve(__dirname, 'resources'),
+        },
     },
 });
