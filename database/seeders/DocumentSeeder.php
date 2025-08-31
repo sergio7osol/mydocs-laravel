@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Document;
 use Illuminate\Database\Seeder;
+use App\Models\Document;
+use App\Models\Label;
 
 class DocumentSeeder extends Seeder
 {
@@ -12,6 +13,8 @@ class DocumentSeeder extends Seeder
      */
     public function run(): void
     {
-        Document::factory(5)->create();
+        $labels = Label::factory(3)->create();
+        
+        Document::factory(5)->hasAttached($labels)->create();
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Category;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Label;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Document>
@@ -74,6 +75,33 @@ class DocumentFactory extends Factory
                 'file_type' => 'application/pdf',
             ];
         });
+    }
+    
+    /**
+     * Generate a GIF document
+     */
+    public function gif()
+    {
+        return $this->state(function (array $attributes) {
+            $filename = fake()->word() . '.gif';
+            return [
+                'filename' => $filename,
+                'file_path' => 'images/' . $filename,
+                'file_type' => 'image/gif',
+            ];
+        });
+    }
+
+    /**
+     * Configure the model factory to attach labels
+     */
+    public function withLabels($labels = null, string $relationship = 'labels')
+    {
+        return $this->hasAttached(
+            $labels ?? Label::factory(3),
+            [],
+            $relationship
+        );
     }
     
     /**

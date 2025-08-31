@@ -38,8 +38,14 @@ class Document extends Model {
         return $this->belongsTo(Category::class);
     }
 
-    public function tags() {
-        return $this->belongsToMany(Tag::class);
+    public function label($name) {
+        $label = Label::firstOrCreate(['name' => $name]);
+
+        $this->labels()->attach($label);
+    }
+
+    public function labels() {
+        return $this->belongsToMany(Label::class);
     }
 
     public function getFileSizeHumanAttribute(): string {
