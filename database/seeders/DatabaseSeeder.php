@@ -16,5 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DocumentSeeder::class,
         ]);
+
+        $this->call([DocumentSeeder::class]);
     }
 }
