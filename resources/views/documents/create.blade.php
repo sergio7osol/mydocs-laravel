@@ -96,6 +96,17 @@
                 characters)</small>
             </div>
 
+            <div class="upload-form__line">
+              <label for="labels" class="upload-form__line-title">Labels (optional):</label>
+              <input type="text" name="labels" id="labels"
+                class="upload-form__line-input {{ $errors->has('labels') ? 'is-invalid' : '' }}"
+                value="{{ old('labels') }}" placeholder="e.g. urgent, finance">
+              @error('labels')
+              <div class="upload-form__error-message">{{ $message }}</div>
+              @enderror
+              <small class="upload-form__line-clarification">Separate multiple labels with commas. Labels help with filtering documents.</small>
+            </div>
+
             <!-- Submit Button -->
             <div class="upload-form__line upload-form__line--button">
               <button type="submit" class="upload-form__line-button">Upload Document</button>

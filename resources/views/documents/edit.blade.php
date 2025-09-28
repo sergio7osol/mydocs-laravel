@@ -99,14 +99,24 @@
               @error('description')
               <div class="upload-form__error-message">{{ $message }}</div>
               @enderror
-              <small class="upload-form__line-clarification">Brief description of the document (maximum 300
-                characters)</small>
+              <small class="upload-form__line-clarification">Brief description of the document being uploaded.</small>
+            </div>
+
+            <div class="upload-form__line">
+              <label for="labels" class="upload-form__line-title">Labels (optional):</label>
+              <input type="text" name="labels" id="labels"
+                class="upload-form__line-input {{ $errors->has('labels') ? 'is-invalid' : '' }}"
+                value="{{ old('labels', $document->labels->pluck('name')->implode(', ')) }}" placeholder="e.g. urgent, finance">
+              @error('labels')
+              <div class="upload-form__error-message">{{ $message }}</div>
+              @enderror
+              <small class="upload-form__line-clarification">Separate multiple labels with commas. Existing labels are shown above.</small>
             </div>
 
             <!-- Submit Button -->
             <div class="upload-form__line upload-form__line--button">
               <button type="submit" class="upload-form__line-button">Upload Document</button>
-            </div>
+{{ ... }}
           </form>
         </div>
       </article>

@@ -11,12 +11,13 @@ use Illuminate\Validation\Rule;
 use App\Models\Document;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Label;
 use App\Mail\AccountCreated;
 
 class DocumentController extends Controller
 {
   public function index() {
-    $documents = Document::with(['category', 'user'])->latest()->paginate(5);
+    $documents = Document::with(['category', 'user', 'labels'])->latest()->paginate(5);
 
     return view('documents.index', [
       'pageTitle' => 'Documents list',
@@ -67,6 +68,7 @@ class DocumentController extends Controller
   }
 
   public function show(Document $document) {
+    $document->loadMissing(['category', 'user', 'labels']);
     // Build paths/URLs for UI copy and view actions
     $filePublicUrl = asset('storage/' . ltrim($document->file_path ?? '', '/'));
     $windowsFilePath = $document->file_path
@@ -100,6 +102,7 @@ class DocumentController extends Controller
       'created_date' => 'nullable|date',
       'category_id'  => $categoryRule,
       'document'     => 'required|file|mimes:pdf,doc,docx,txt,xls,xlsx,jpg,png,gif|max:15360', // 15 MB max
+      'labels'       => 'nullable|string|max:50',
     ]);
   
     try {
@@ -121,6 +124,8 @@ class DocumentController extends Controller
         'file_type'    => $file->getMimeType(),
       ]);
 
+      $this->syncLabels($document, $request->input('labels'));
+
       Mail::to($document->category->user)->queue(
         new AccountCreated($document)
       );
@@ -132,6 +137,7 @@ class DocumentController extends Controller
   }
 
   public function edit(Document $document) {
+    $document->loadMissing('labels');
     // Build categories list: admins see all; non-admins see only their own categories
     $categoriesQuery = Category::query();
     if (!Auth::user()?->is_admin) {
@@ -169,6 +175,7 @@ class DocumentController extends Controller
       'created_date' => 'nullable|date',
       'category_id'  => $categoryRule,
       'document'     => 'nullable|file|mimes:pdf,doc,docx,txt,xls,xlsx,jpg,png,gif|max:15360', // Optional for updates
+      'labels'       => 'nullable|string|max:50',
     ]);
   
     try {
@@ -197,11 +204,32 @@ class DocumentController extends Controller
       }
   
       $document->save();
-  
+
+      $this->syncLabels($document, $request->input('labels'));
+
       return redirect()->route('documents.show', $document)->with('message', 'Document updated successfully!');
     } catch (\Exception $e) {
       return redirect()->back()->withErrors(['document' => 'Update failed: ' . $e->getMessage()])->withInput();
     }
+  }
+
+  private function syncLabels(Document $document, ?string $labelsInput): void
+  {
+    $names = collect(explode(',', (string) $labelsInput))
+      ->map(fn ($name) => trim($name))
+      ->filter()
+      ->unique();
+
+    if ($names->isEmpty()) {
+      $document->labels()->sync([]);
+      return;
+    }
+
+    $labelIds = $names->map(function ($name) {
+      return Label::firstOrCreate(['name' => $name])->id;
+    });
+
+    $document->labels()->sync($labelIds->all());
   }
 
   public function destroy(Document $document) {

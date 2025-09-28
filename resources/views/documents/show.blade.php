@@ -39,6 +39,18 @@
        <span class="document-view__category">{{ $document->category->name ?? 'Uncategorized' }}</span>
       </td>
      </tr>
+     @if ($document->labels->isNotEmpty())
+      <tr class="document-view__row">
+       <td class="document-view__label">Labels:</td>
+       <td class="document-view__value">
+        <div class="document-view__labels" aria-label="Document labels">
+         @foreach ($document->labels as $label)
+          <span class="document-label">🏷️ {{ $label->name }}</span>
+         @endforeach
+        </div>
+       </td>
+      </tr>
+     @endif
      <tr class="document-view__row">
       <td class="document-view__label">Owner:</td>
       <td class="document-view__value">
